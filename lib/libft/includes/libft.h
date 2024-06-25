@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 14:59:04 by cgray             #+#    #+#             */
-/*   Updated: 2024/01/16 17:01:27 by cgray            ###   ########.fr       */
+/*   Updated: 2024/03/28 15:21:51 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_list
 }						t_list;
 
 int						ft_atoi(const char *string);
+long					ft_atol(const char *string);
 int						ft_atoi_base(char *str, int base);
 int						ft_abs(int n);
 void					*ft_bzero(void *str, size_t len);
@@ -34,6 +35,7 @@ int						ft_isalpha(int c);
 int						ft_isascii(int c);
 int						ft_isdigit(int c);
 int						ft_isprint(int c);
+int						ft_isspace(int c);
 char					*ft_itoa(int n);
 int						ft_max(int a, int b);
 void					*ft_memchr(const void *big, int little, size_t len);
@@ -56,6 +58,7 @@ size_t					ft_strlen(const char *c);
 char					*ft_strmapi(char const *s, char (*f)(unsigned int,
 								char));
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
+char					*ft_strndup(const char *s, size_t n);
 char					*ft_strnstr(const char *big, const char *little,
 							size_t len);
 char					*ft_strrchr(const char *string, int search);

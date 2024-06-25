@@ -1,5 +1,5 @@
 NAME		:= cub3d
-CFLAGS		:= -g
+CFLAGS		:= -Wall -Werror -Wextra -g
 CC 			:= cc
 
 LIBMLX_PATH	:= ./lib/mlx
@@ -14,7 +14,7 @@ INC_LIBMLX	:= -I ./include -I $(LIBMLX_PATH)/include
 INC_LIBFT	:= -I ./libft
 
 SRC_PATH	:= src/
-SRC			:= raycast_test.c
+SRC			:= main.c parse_file.c parse_utils.c parse_map.c
 SRCS		:= $(addprefix $(SRC_PATH), $(SRC))
 
 OBJ_PATH:= obj/

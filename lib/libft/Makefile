@@ -3,23 +3,24 @@ INCLUDES = includes
 SRC_DIR = src/
 OBJ_DIR = obj/
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I
+CFLAGS = -Wall -Wextra -Werror -g -I
 RM = rm -f
 AR = ar rcs
 
 IS_DIR = is_fns/
 IS_FNS = ft_isalnum ft_isalpha ft_isascii \
-		ft_isdigit ft_isprint
+		ft_isdigit ft_isprint ft_isspace
 
 STR_DIR = str_fns/
 STR_FNS = ft_count_words ft_split ft_strchr \
 		ft_strdup ft_striteri ft_strjoin \
 		ft_strlcat ft_strlcpy ft_strlen \
 		ft_strmapi ft_strncmp ft_strnstr \
-		ft_strrchr ft_strtrim ft_substr
+		ft_strrchr ft_strtrim ft_substr \
+		ft_strndup
 
 CONV_DIR = convert_fns/
-CONV_FNS = ft_atoi ft_itoa ft_tolower \
+CONV_FNS = ft_atoi ft_atol ft_itoa ft_tolower \
 		ft_toupper ft_max ft_abs ft_atoi_base
 
 PUT_FD_DIR = put_fd_fns/
@@ -86,5 +87,4 @@ re: fclean all
 
 norm:
 	@norminette $(SRCS) $(INCLUDES) | grep -v Norme -B1 || true
-
 
