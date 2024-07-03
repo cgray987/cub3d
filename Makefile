@@ -1,5 +1,5 @@
-NAME		:= cub3d
-CFLAGS		:= -Wall -Werror -Wextra -g
+NAME		:= cub3D
+CFLAGS		:= -Wall -Werror -Wextra -O2 -g
 CC 			:= cc
 
 LIBMLX_PATH	:= ./lib/mlx
@@ -14,7 +14,9 @@ INC_LIBMLX	:= -I ./include -I $(LIBMLX_PATH)/include
 INC_LIBFT	:= -I ./libft
 
 SRC_PATH	:= src/
-SRC			:= main.c parse_file.c parse_utils.c parse_map.c
+SRC			:= main.c parse_file.c parse_utils.c parse_map.c \
+				parse_map_utils.c draw_mini_map.c \
+				move_player.c
 SRCS		:= $(addprefix $(SRC_PATH), $(SRC))
 
 OBJ_PATH:= obj/
@@ -44,8 +46,8 @@ libft:
 
 libmlx:
 	@echo "$(BOLD)$(BCYAN)[ Making MLX42... ]$(NC)"
-	@cmake $(LIBMLX_PATH) -DDEBUG=1 -B $(LIBMLX_PATH)/build && make -C $(LIBMLX_PATH)/build -j4
-# -B for build
+	@cmake $(LIBMLX_PATH) -B $(LIBMLX_PATH)/build && make -C $(LIBMLX_PATH)/build -j4
+# -B for build -DDEBUG=1
 	@echo "$(BOLD)$(GREEN)[ MLX42 ready! ]$(NC)"
 
 $(NAME): $(OBJS)

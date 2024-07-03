@@ -6,11 +6,29 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:38:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/06/24 16:30:54 by cgray            ###   ########.fr       */
+/*   Updated: 2024/06/26 16:42:30 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	free_array(void **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		if (array[i])
+		{
+			free(array[i]);
+			array[i] = NULL;
+		}
+		i++;
+	}
+	if (array)
+		free(array);
+}
 
 void	free_cub_file(t_cub_file *cub_file)
 {
@@ -23,9 +41,7 @@ void	free_cub_file(t_cub_file *cub_file)
 	free(cub_file->EA);
 	free(cub_file->floor);
 	free(cub_file->ceiling);
-	while (cub_file->map[i])
-		free(cub_file->map[i++]);
-	free(cub_file->map);
+	free_array((void **)cub_file->map);
 	free(cub_file);
 }
 

@@ -6,64 +6,15 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 12:23:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/06/25 17:18:39 by cgray            ###   ########.fr       */
+/*   Updated: 2024/07/03 20:10:21 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	get_map_height(t_map_file *map_file)
-{
-	int	i;
-
-	i = 0;
-	while (map_file->map[i])
-		i++;
-	return (i);
-}
-
-static int	get_map_width(t_map_file *map_file)
-{
-	int	i;
-	int	j;
-	int	j_max;
-
-	i = 0;
-	j = 0;
-	j_max = 0;
-	while (map_file->map[i])
-	{
-		j = 0;
-		while (map_file->map[i][j])
-		{
-			j++;
-			if (j > j_max)
-				j_max = j;
-		}
-		i++;
-	}
-	return (j_max);
-}
-
-static bool	init_map_file(t_map_file *map_file, t_map_valid *valid)
-{
-	valid->valid_ceiling = false;
-	valid->valid_direction = false;
-	valid->valid_floor = false;
-	valid->valid_ceiling = false;
-
-	map_file->map_height = get_map_height(map_file);
-	map_file->map_width = get_map_width(map_file);
-	if (map_file->map_width == -1)
-		return (false);
-	map_file->init_player_x = 0;
-	map_file->init_player_y = 0;
-	// map_file->ceiling_color = {0, 0, 0};
-	// map_file->floor_color = {0, 0, 0};
-	return (true);
-}
-
-static bool	check_player_direction(t_map_file *map_file, t_map_valid *valid)
+/* loops through map, looking for NSWE. returns false if no or multi player
+sets init player pos in map_file */
+static bool	check_player_direction(t_map_file *map_file) //, t_map_valid *valid
 {
 	int	i;
 	int	j;
@@ -72,9 +23,9 @@ static bool	check_player_direction(t_map_file *map_file, t_map_valid *valid)
 	multi_player = 0;
 	i = 0;
 	j = 0;
-	while (i < map_file->map_height)
+	while (map_file->map[i])
 	{
-		while (j < map_file->map_width)
+		while (map_file->map[i][j])
 		{
 			if (map_file->map[i][j] == 'N' || map_file->map[i][j] == 'S'
 				|| map_file->map[i][j] == 'W' || map_file->map[i][j] == 'E')
@@ -84,7 +35,7 @@ static bool	check_player_direction(t_map_file *map_file, t_map_valid *valid)
 				map_file->init_direction = map_file->map[i][j];
 				map_file->init_player_x = j;
 				map_file->init_player_y = i;
-				valid->valid_direction = true;
+				// valid->valid_direction = true;
 			}
 			j++;
 
@@ -97,122 +48,117 @@ static bool	check_player_direction(t_map_file *map_file, t_map_valid *valid)
 	return (true);
 }
 
-void	free_array(void **array)
+/* starts at a pixel inside the map. checks that initial place
+and up, down, left and right are filled. called for every '0' and
+initial player position*/
+static int	boundary_fill(int i, int j, char **map)
 {
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		array[i] = NULL;
-	}
-	free(array);
-}
-
-static int	boundary_fill(int i, int j, char **fill_map)
-{
-	if (i < 0 || !fill_map[i]
-		|| j < 0 || (fill_map[i] && !fill_map[i][j]))
-		return (1);
-	else if (fill_map[i][j] == '1')
+	if ((i == 0 || j == 0) && map[i][j] == '0')
 		return (0);
-	fill_map[i][j] = '1';
-	// printf("changed fill map\n");
-	return (
-	boundary_fill(i - 1, j, fill_map)
-	+ boundary_fill(i + 1, j, fill_map)
-	+ boundary_fill(i, j - 1, fill_map)
-	+ boundary_fill(i, j + 1, fill_map));
+	else if (map[i - 1][j] == ' ' || map[i + 1][j] == ' ' \
+		|| map[i][j - 1] == ' ' || map[i][j + 1] == ' ' \
+		|| !map[i - 1][j] || !map[i + 1][j] \
+		|| !map[i][j - 1] || !map[i][j + 1])
+		return (0);
+	else if (ft_strchr("NSWE", map[i][j])
+		&& (map[i - 1][j] == '1' && map[i + 1][j] == '1' \
+		&& map[i][j - 1] == '1' && map[i][j + 1] == '1'))
+		return (0);
+	return (1);
 }
 
-/* need to also check interior walls with holes */
-static bool	check_walls(t_map_file *map_file)
+/* ft_strchr("NSWE", map[i - 1][j]) \
+		|| ft_strchr("NSWE", map[i + 1][j]) \
+		|| ft_strchr("NSWE", map[i][j - 1]) \
+		|| ft_strchr("NSWE", map[i][j + 1]) \ */
+
+/* loops through entire map, checking if '0's and player pos are enclosed */
+static bool boundary_fill_loop(int p_x, int p_y, char **fill_map)
 {
 	int	i;
 	int	j;
-	int	x;
-	int	y;
+
+	i = 0;
+	j = 0;
+	while (fill_map[i])
+	{
+		j = 0;
+		while (fill_map[i][j])
+		{
+			if (fill_map[i][j] == '0' && !boundary_fill(i, j, fill_map))
+				return (false);
+			if (i == p_y && j == p_x && !boundary_fill(i, j, fill_map))
+				return (false);
+			j++;
+		}
+		i++;
+	}
+	return (true);
+}
+
+/* dups map into 'fill_map' in order to test if walls are enclosed
+returns false if walls are not */
+static bool	check_walls(t_map_file *map_file)
+{
+	int	i;
 	char	**fill_map;
 	bool	surrounded;
 
 	i = 0;
-	fill_map = malloc(sizeof(char *) * map_file->map_height + 1);
-	if (!fill_map)
-		return (false);
-	while (i < map_file->map_height)
-	{
-		fill_map[i] = ft_strdup(map_file->map[i]);
-		i++;
-	}
-	fill_map[i] = NULL;
-	x = map_file->init_player_x;
-	y = map_file->init_player_y;
-	i = 0;
+	fill_map = dup_array(map_file->map, map_file->map_height);
 	surrounded = true;
-	int test = boundary_fill(y, x, fill_map);
-	if (test > 0)
-		surrounded = false;
-	// while (fill_map[i])
-	// {
-	// 	j = 0;
-	// 	while (fill_map[i][j])
-	// 	{
-	// 		if (fill_map[i][j] == '0' && boundary_fill(i, j, fill_map))
-	// 		{
-	// 			surrounded = false;
-	// 			break ;
-	// 		}
-	// 		j++;
-	// 	}
-	// 	i++;
-	// }
-
-	i = 0;
-	j = 0;
-	printf("fill map\n");
-	while (i < map_file->map_height)
-	{
-		while (j < map_file->map_width)
-		{
-			if (fill_map[i][j] == '1')
-				printf("X");
-			else
-				printf(" ");
-			j++;
-		}
-		printf("\n");
-		j = 0;
-		i++;
-	}
+	surrounded = boundary_fill_loop(map_file->init_player_x, map_file->init_player_y, fill_map);
+	// print_fill_map(map_file, fill_map);
 	free_array((void **)fill_map);
 	return (surrounded);
 }
 
-
-bool	parse_map(t_cub_file *cub_file)
+void	get_init_direction(t_game *game)
 {
-	t_map_file	*map_file;
-	t_map_valid	*valid;
-	map_file = malloc(sizeof(t_map_file));
-	valid = malloc(sizeof(t_map_valid));
-	map_file->map = cub_file->map;
+	if (game->map->init_direction == 'N')
+		game->player.dir = PI / 2;
+	if (game->map->init_direction == 'S')
+		game->player.dir = 3 * PI / 2;
+	if (game->map->init_direction == 'W')
+		game->player.dir = 0;
+	if (game->map->init_direction == 'E')
+		game->player.dir = PI;
+}
 
-	if (init_map_file(map_file, valid) == false)
+/* called in parse_data
+	initialize t_map_file, check player direction
+	check walls are enclosed */
+bool	parse_map(t_cub_file *cub_file, t_game *game)
+{
+	bool	check;
+	// t_map_file	*map_file;
+	// t_map_valid	*valid;
+	game->map = malloc(sizeof(t_map_file));
+	// valid = malloc(sizeof(t_map_valid));
+	game->map->map = dup_array(cub_file->map, get_map_height(cub_file->map));
+	check = true;
+	if (init_map_file(game->map) == false)
 	{
 		dprintf(2, "Map size invalid!\n");
-		return (false);
+		check = false;
 	}
-	if (check_player_direction(map_file, valid) == false)
+	if (check_player_direction(game->map) == false)
 	{
 		dprintf(2, "Invalid player!\n");
-		return (false);
+		check = false;
 	}
-	if (check_walls(map_file) == false)
+	if (check_walls(game->map) == false)
 	{
-		dprintf(2, "Map not surrounded by walls!\n");
-		return (false);
+		dprintf(2, "Map not surrounded by walls "
+			"or player is enclosed!\n");
+		check = false;
 	}
+	game->player.x = game->map->init_player_x;
+	game->player.y = game->map->init_player_y;
+	get_init_direction(game);
+	// game->map = map_file;
 
-	return (true);
+	// free_map_file(map_file);
+
+	return (check);
 }

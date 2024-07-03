@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:43:25 by cgray             #+#    #+#             */
-/*   Updated: 2024/06/25 14:35:46 by cgray            ###   ########.fr       */
+/*   Updated: 2024/07/01 16:54:19 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static bool check_argument(char *arg, t_cub_file *cub_struct)
 int	parse_data(char *arg, t_game *game)
 {
 	t_cub_file	*cub_file;
-	game = malloc(sizeof(t_game));
+	// game = malloc(sizeof(t_game));
 	cub_file = malloc(sizeof(t_cub_file));
 	init_cub_file(cub_file);
 	if (check_argument(arg, cub_file) == false)
@@ -114,14 +114,14 @@ int	parse_data(char *arg, t_game *game)
 	int i = 0;
 	while (cub_file->map[i])
 		printf("%s\n", cub_file->map[i++]);
-	if (parse_map(cub_file) == false)
+	if (parse_map(cub_file, game) == false)
 	{
 		dprintf(2, "Invalid map!\n");
 		return (1);
 	}
 
 	free_cub_file(cub_file);
-	free(game);
+	// free(game);
 
 	return (0);
 }
