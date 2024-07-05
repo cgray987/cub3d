@@ -89,15 +89,15 @@ void	draw_line(int x0, int y0, int x1, int y1, mlx_image_t *img)
 		if (x0 == x1 && y0 == y1)
 			break ;
 		e2 = 2 * err;
-		if (e2 >= dy)
+		if (e2 >= dy)/* e_xy+e_x > 0 */
 		{
 			err += dy;
 			x0 += sx;
-		} /* e_xy+e_x > 0 */
-		if (e2 <= dx)
+		} 
+		if (e2 <= dx)/* e_xy+e_y < 0 */
 		{
 			err += dx;
 			y0 += sy;
-		} /* e_xy+e_y < 0 */
+		} 
 	}
 }

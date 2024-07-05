@@ -102,5 +102,6 @@ void	draw_square(mlx_image_t *img, int x, int y, int size, uint32_t color);
 void	check_walls(t_player *player, double new_x, double new_y, char **map);
 void	rotate_player(t_player *player, double angle);
 void	move_player(t_player *player, int key, char **map);
+void	draw_line(int x0, int y0, int x1, int y1, mlx_image_t *img);
 
 #endif

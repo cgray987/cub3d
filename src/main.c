@@ -32,11 +32,12 @@ void	re_draw(t_game * game)
 	mini_pos_y = game->player.y * MINI_SCALE - 2;
 	dx = cos(game->player.dir);
 	dy = sin(game->player.dir);
+	// ray_cast_start();
 	draw_square(game->img, mini_pos_x, mini_pos_y,
 				5, 0x88db7bff);
 	draw_line(mini_pos_x, mini_pos_y,
 			mini_pos_x + 20 * dx, mini_pos_y + 20 * dy,
-			game->img);
+			game->img); // draw direction vector on minimap
 }
 
 static void	key_hook(void *v_game)
