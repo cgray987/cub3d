@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 20:18:24 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/03 20:23:24 by cgray            ###   ########.fr       */
+/*   Updated: 2024/07/04 16:21:03 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ void	move_player(t_player *player, int key, char **map)
 	dx = cos(player->dir);
 	dy = sin(player->dir);
 	if (key == MLX_KEY_A)
-		check_walls(player, player->x - .1 * dy,
+		check_walls(player, player->x - .05 * dy,
 					player->y + .1 * dx, map);
 	if (key == MLX_KEY_D)
-		check_walls(player, player->x + .1 * dy,
+		check_walls(player, player->x + .05 * dy,
 					player->y - .1 * dx, map);
 	if (key == MLX_KEY_W)
 		check_walls(player, player->x + .1 * dx,
