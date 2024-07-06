@@ -75,9 +75,9 @@ int		set_ceiling_floor(char *line, char *dir, t_cub_file *cub)
 			size++;
 		line -= size + 1;
 		if (!ft_strncmp(dir, "C", 1))
-			cub->ceiling = ft_strndup(line, size);
+			cub->ceiling = ft_strndup(line, size); //create function to extract color code rather than string
 		else if (!ft_strncmp(dir, "F", 1))
-			cub->floor = ft_strndup(line, size);
+			cub->floor = ft_strndup(line, size); //create function to extract color code rather than string
 		return (1);
 	}
 	return (0);
