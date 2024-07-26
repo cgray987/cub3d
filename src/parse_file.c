@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:43:25 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/01 16:54:19 by cgray            ###   ########.fr       */
+/*   Updated: 2024/07/08 17:53:05 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	parse_data(char *arg, t_game *game)
 		return (1);
 	}
 
-	free_cub_file(cub_file);
+	// free_cub_file(cub_file);
 	// free(game);
 
 	return (0);

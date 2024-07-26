@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:38:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/06/26 16:42:30 by cgray            ###   ########.fr       */
+/*   Updated: 2024/07/08 17:58:53 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,6 @@ void	free_array(void **array)
 
 void	free_cub_file(t_cub_file *cub_file)
 {
-	int	i;
-
-	i = 0;
 	free(cub_file->NO);
 	free(cub_file->SO);
 	free(cub_file->WE);

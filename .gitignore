@@ -61,3 +61,6 @@ obj/parse_file.o
 obj/parse_map.o
 obj/parse_utils.o
 obj/raycast_test.o
+obj/draw_mini_map.o
+obj/move_player.o
+obj/parse_map_utils.o

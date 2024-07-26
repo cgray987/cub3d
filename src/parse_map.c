@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 12:23:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/03 20:10:21 by cgray            ###   ########.fr       */
+/*   Updated: 2024/07/26 18:09:45 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,22 @@ static bool	check_player_direction(t_map_file *map_file) //, t_map_valid *valid
 
 	multi_player = 0;
 	i = 0;
-	j = 0;
 	while (map_file->map[i])
 	{
+		j = 0;
 		while (map_file->map[i][j])
 		{
 			if (map_file->map[i][j] == 'N' || map_file->map[i][j] == 'S'
 				|| map_file->map[i][j] == 'W' || map_file->map[i][j] == 'E')
 			{
 				multi_player++;
-				// map_file->map[i][j] = '0'; //replace player with '0' as a valid space
 				map_file->init_direction = map_file->map[i][j];
 				map_file->init_player_x = j;
 				map_file->init_player_y = i;
-				// valid->valid_direction = true;
 			}
 			j++;
 
 		}
-		j = 0;
 		i++;
 	}
 	if (multi_player != 1)
@@ -100,11 +97,9 @@ static bool boundary_fill_loop(int p_x, int p_y, char **fill_map)
 returns false if walls are not */
 static bool	check_walls(t_map_file *map_file)
 {
-	int	i;
 	char	**fill_map;
 	bool	surrounded;
 
-	i = 0;
 	fill_map = dup_array(map_file->map, map_file->map_height);
 	surrounded = true;
 	surrounded = boundary_fill_loop(map_file->init_player_x, map_file->init_player_y, fill_map);
@@ -116,13 +111,59 @@ static bool	check_walls(t_map_file *map_file)
 void	get_init_direction(t_game *game)
 {
 	if (game->map->init_direction == 'N')
-		game->player.dir = PI / 2;
+	{
+		game->player->d->dy = -1;
+		game->player->plane->dx = 0.66;
+	}
 	if (game->map->init_direction == 'S')
-		game->player.dir = 3 * PI / 2;
+	{
+		game->player->d->dy = 1;
+		game->player->plane->dx = -0.66;
+	}
 	if (game->map->init_direction == 'W')
-		game->player.dir = 0;
+	{
+		game->player->d->dx = -1;
+		game->player->plane->dy = 0.66;
+	}
 	if (game->map->init_direction == 'E')
-		game->player.dir = PI;
+	{
+		game->player->d->dx = 1;
+		game->player->plane->dy = -0.66;
+	}
+	// game->player->d->dx = cos(game->player->dir);
+	// game->player->d->dy = sin(game->player->dir);
+}
+
+void	init_player(t_game *game)
+{
+	game->player = malloc(sizeof(t_player));
+	game->player->x = game->map->init_player_x + 0.5;
+	game->player->y = game->map->init_player_y + 0.5;
+	game->player->dir = 0;
+	game->player->d = malloc(sizeof(t_direction));
+	game->player->plane = malloc(sizeof(t_direction));
+	game->player->d->dx = 0;
+	game->player->d->dy = 0;
+	game->player->plane->dx = 0;
+	game->player->plane->dy = 0;
+}
+
+int	get_ceiling_floor_color(char *color)
+{
+	int	r;
+	int	g;
+	int	b;
+	char	*tmp;
+	char	*o_tmp;
+
+	o_tmp = ft_strdup(color);
+	tmp = o_tmp;
+	r = ft_atoi(color);
+	g = ft_atoi(ft_strchr(color, ',') + 1);
+	tmp = ft_strchr(color, ',') + 1;
+	b = ft_atoi(ft_strchr(tmp, ',') + 1);
+	free(o_tmp);
+	return (combine_color(r, g, b));
 }
 
 /* called in parse_data
@@ -153,10 +194,12 @@ bool	parse_map(t_cub_file *cub_file, t_game *game)
 			"or player is enclosed!\n");
 		check = false;
 	}
-	game->player.x = game->map->init_player_x;
-	game->player.y = game->map->init_player_y;
+	init_player(game);
 	get_init_direction(game);
+	game->ceiling = get_ceiling_floor_color(cub_file->ceiling);
+	game->floor = get_ceiling_floor_color(cub_file->floor);
 	// game->map = map_file;
+	free_cub_file(cub_file);
 
 	// free_map_file(map_file);
 

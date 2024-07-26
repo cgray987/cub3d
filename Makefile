@@ -1,5 +1,5 @@
 NAME		:= cub3D
-CFLAGS		:= -Wall -Werror -Wextra -O2 -g
+CFLAGS		:= -Wall -Werror -Wextra -g
 CC 			:= cc
 
 LIBMLX_PATH	:= ./lib/mlx
@@ -16,7 +16,7 @@ INC_LIBFT	:= -I ./libft
 SRC_PATH	:= src/
 SRC			:= main.c parse_file.c parse_utils.c parse_map.c \
 				parse_map_utils.c draw_mini_map.c \
-				move_player.c
+				move_player.c raycast.c raycast_utils.c color_utils.c
 SRCS		:= $(addprefix $(SRC_PATH), $(SRC))
 
 OBJ_PATH:= obj/
