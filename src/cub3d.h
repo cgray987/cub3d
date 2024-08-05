@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:38:44 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 13:45:34 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/05 16:22:38 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ typedef struct s_game
 	mlx_t			*mlx;
 	mlx_image_t		*img;
 	t_map_file		*map;
-	uint32_t		ceiling;
-	uint32_t		floor;
+	int				ceiling;
+	int				floor;
 	mlx_texture_t	*texture[4];
 	int				mini_scale;
 	double			perp_wall_dist; //used for drawing on minimap
@@ -134,7 +134,7 @@ typedef struct s_txt_math
 	double		step;
 	double		txt_pos;
 	int			txt_y;
-	uint32_t	color;
+	int			color;
 	int			pixel_index;
 }				t_txt_math;
 

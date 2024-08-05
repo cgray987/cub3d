@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 13:07:19 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/02 15:57:00 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/05 16:23:43 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,13 @@ int	get_ceiling_floor_color(char *color)
 	tmp = ft_strchr(color, ',') + 1;
 	b = ft_atoi(ft_strchr(tmp, ',') + 1);
 	free(o_tmp);
+	if (r < 0 || r > 255
+		|| g < 0 || g > 255
+		|| b < 0 || b > 255)
+	{
+		dprintf(2, "Floor/Ceiling colors must be in range 0 - 255!\n");
+		return -1;
+	}
 	return (combine_color(r, g, b, 0xff));
 }
 

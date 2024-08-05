@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 12:23:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 13:38:38 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/05 16:25:02 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,10 @@ bool	parse_map(t_cub_file *cub_file, t_game *game)
 	get_init_direction(game);
 	game->ceiling = get_ceiling_floor_color(cub_file->ceiling);
 	game->floor = get_ceiling_floor_color(cub_file->floor);
-	if (load_textures(game, cub_file) == false)
+	if (game->ceiling == -1 || game->floor == -1)
+		check = false;
+	if (check == true &&
+		load_textures(game, cub_file) == false)
 		check = false;
 	free_cub_file(cub_file);
 	return (check);
