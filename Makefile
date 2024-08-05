@@ -15,8 +15,9 @@ INC_LIBFT	:= -I ./libft
 
 SRC_PATH	:= src/
 SRC			:= main.c parse_file.c parse_utils.c parse_map.c \
-				parse_map_utils.c draw_mini_map.c \
-				move_player.c raycast.c raycast_utils.c color_utils.c
+				parse_map_init.c parse_map_utils.c draw_mini_map.c \
+				move_player.c move_utils.c raycast.c raycast_utils.c \
+				color_utils.c textures.c draw.c
 SRCS		:= $(addprefix $(SRC_PATH), $(SRC))
 
 OBJ_PATH:= obj/

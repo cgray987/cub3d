@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:43:25 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/08 17:53:05 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/01 16:24:58 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 static char	*map_str(char *line, char *map)
 {
 	char	*new_map;
+
 	if (*line == '\n')
 		return (map);
 	if (!map && line)
@@ -26,7 +27,6 @@ static char	*map_str(char *line, char *map)
 		new_map = ft_strjoin(map, line);
 		free(map);
 	}
-
 	return (new_map);
 }
 
@@ -46,7 +46,7 @@ static void	handle_textures(char *line, t_cub_file *cub)
 		return ;
 	else if (set_ceiling_floor(line, "F", cub))
 		return ;
-	if (cub->NO && cub->SO && cub->WE && cub->EA
+	if (cub->no && cub->so && cub->we && cub->ea
 		&& cub->ceiling && cub->floor)
 		cub->textures_done = true;
 }
@@ -69,7 +69,7 @@ static bool	map_reader(char *line, char **map, t_cub_file *cub_struct)
 	place in cub struct.
 	textures must come before map, so if textures don't finish
 	returns false*/
-static bool check_argument(char *arg, t_cub_file *cub_struct)
+static bool	check_argument(char *arg, t_cub_file *cub_struct)
 {
 	char		*line;
 	char		*map;
@@ -78,7 +78,7 @@ static bool check_argument(char *arg, t_cub_file *cub_struct)
 	fd = open(arg, O_RDONLY, 0644);
 	if (fd == -1)
 		return (false);
-	map = NULL; //because I check if map is null later
+	map = NULL;
 	while (1)
 	{
 		line = get_next_line(fd);
@@ -103,25 +103,19 @@ static bool check_argument(char *arg, t_cub_file *cub_struct)
 int	parse_data(char *arg, t_game *game)
 {
 	t_cub_file	*cub_file;
-	// game = malloc(sizeof(t_game));
+
 	cub_file = malloc(sizeof(t_cub_file));
 	init_cub_file(cub_file);
 	if (check_argument(arg, cub_file) == false)
 	{
 		dprintf(2, "Invalid .cub file!\n");
+		free(cub_file);
 		return (1);
 	}
-	int i = 0;
-	while (cub_file->map[i])
-		printf("%s\n", cub_file->map[i++]);
 	if (parse_map(cub_file, game) == false)
 	{
 		dprintf(2, "Invalid map!\n");
-		return (1);
+		return (2);
 	}
-
-	// free_cub_file(cub_file);
-	// free(game);
-
 	return (0);
 }

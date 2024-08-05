@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:38:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/08 17:58:53 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/01 16:39:14 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void	free_array(void **array)
 
 void	free_cub_file(t_cub_file *cub_file)
 {
-	free(cub_file->NO);
-	free(cub_file->SO);
-	free(cub_file->WE);
-	free(cub_file->EA);
+	free(cub_file->no);
+	free(cub_file->so);
+	free(cub_file->we);
+	free(cub_file->ea);
 	free(cub_file->floor);
 	free(cub_file->ceiling);
 	free_array((void **)cub_file->map);
@@ -45,10 +45,10 @@ void	free_cub_file(t_cub_file *cub_file)
 void	init_cub_file(t_cub_file *cub_file)
 {
 	cub_file->textures_done = false;
-	cub_file->NO = NULL;
-	cub_file->SO = NULL;
-	cub_file->WE = NULL;
-	cub_file->EA = NULL;
+	cub_file->no = NULL;
+	cub_file->so = NULL;
+	cub_file->we = NULL;
+	cub_file->ea = NULL;
 	cub_file->floor = NULL;
 	cub_file->ceiling = NULL;
 }
@@ -57,12 +57,11 @@ void	init_cub_file(t_cub_file *cub_file)
 	checks that line starts with dir (NO, SO, EA, WE, F, C)
 	skips spaces in line, dups into cub struct
 	returns 1 if successful*/
-int		set_ceiling_floor(char *line, char *dir, t_cub_file *cub)
+int	set_ceiling_floor(char *line, char *dir, t_cub_file *cub)
 {
 	int	size;
 
 	size = 0;
-	// printf("line: %s\n", line);
 	if (line + 1 && !ft_strncmp(line, dir, 1))
 	{
 		line += 1;
@@ -72,9 +71,9 @@ int		set_ceiling_floor(char *line, char *dir, t_cub_file *cub)
 			size++;
 		line -= size + 1;
 		if (!ft_strncmp(dir, "C", 1))
-			cub->ceiling = ft_strndup(line, size); //create function to extract color code rather than string
+			cub->ceiling = ft_strndup(line, size);
 		else if (!ft_strncmp(dir, "F", 1))
-			cub->floor = ft_strndup(line, size); //create function to extract color code rather than string
+			cub->floor = ft_strndup(line, size);
 		return (1);
 	}
 	return (0);
@@ -84,12 +83,11 @@ int		set_ceiling_floor(char *line, char *dir, t_cub_file *cub)
 	checks that line starts with dir (NO, SO, EA, WE, F, C)
 	skips spaces in line, dups into cub struct
 	returns 1 if successful*/
-int		set_texture_dir(char *line, char *dir, t_cub_file *cub)
+int	set_texture_dir(char *line, char *dir, t_cub_file *cub)
 {
 	int	size;
 
 	size = 0;
-	// printf("line: %s\n", line);
 	if (line + 2 && !ft_strncmp(line, dir, 2))
 	{
 		line += 2;
@@ -99,13 +97,13 @@ int		set_texture_dir(char *line, char *dir, t_cub_file *cub)
 			size++;
 		line -= size + 1;
 		if (!ft_strncmp(dir, "NO", 2))
-			cub->NO = ft_strndup(line, size);
+			cub->no = ft_strndup(line, size);
 		else if (!ft_strncmp(dir, "SO", 2))
-			cub->SO = ft_strndup(line, size);
+			cub->so = ft_strndup(line, size);
 		else if (!ft_strncmp(dir, "WE", 2))
-			cub->WE = ft_strndup(line, size);
+			cub->we = ft_strndup(line, size);
 		else if (!ft_strncmp(dir, "EA", 2))
-			cub->EA = ft_strndup(line, size);
+			cub->ea = ft_strndup(line, size);
 		return (1);
 	}
 	return (0);

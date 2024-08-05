@@ -6,27 +6,29 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 16:38:27 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/26 17:34:17 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/05 13:40:32 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-
-void	draw_v_line(int x, int start, int end, uint32_t color, t_game *game)
+/* draws vertical line at given x position
+	draw floor until ray start
+	draw texture until ray end
+	draw ceiling until screen height*/
+void	draw_v_line(int x, t_game *game, t_ray *ray)
 {
 	int	y;
 
 	y = 0;
-	if (start >= HEIGHT || end < 0)
+	if (ray->draw_start >= HEIGHT || ray->draw_end < 0)
 		return ;
-	while (y < start) //draw floor
-		safe_pixel_put(game->img, x, y++, game->ceiling); //0x9dbbd4ff
-	while (y < end) //draw wall
-		safe_pixel_put(game->img, x, y++, color);
-	y = end;
-	while (y < HEIGHT) //draw ceiling
-		safe_pixel_put(game->img, x, y++, game->floor); //0xdbc6a7ff
+	while (y < ray->draw_start)
+		safe_pixel_put(game->img, x, y++, game->ceiling);
+	draw_texture(x, y, game, ray);
+	y = ray->draw_end;
+	while (y < HEIGHT)
+		safe_pixel_put(game->img, x, y++, game->floor);
 }
 
 /* adds to side distances until a wall is reached in map */
@@ -46,10 +48,12 @@ void	dda(t_ray *ray, char **map)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if (map[ray->map_y][ray->map_x] == '1')
-		{
+		if (map[ray->map_y][ray->map_x] == 'D'
+			|| map[ray->map_y][ray->map_x] == 'O')
+			ray->door_hit = true;
+		if (map[ray->map_y][ray->map_x] == '1'
+			|| map[ray->map_y][ray->map_x] == 'D')
 			ray->hit = true;
-		}
 	}
 }
 
@@ -61,24 +65,24 @@ void	raycast_start(t_game *game)
 
 	x = 0;
 	game->perp_wall_dist = 0;
+	game->door_dist = 0;
 	ray = malloc(sizeof(t_ray));
 	init_ray(ray);
 	while (x++ < WIDTH)
 	{
+		ray->x = x;
 		ray->side = 0;
 		ray->perp_wall_dist = 0;
 		ray->cam_x = 2.0 * x / WIDTH - 1;
 		ray_len(ray, game->player);
 		ray_direction(ray, game->player->x, game->player->y);
 		ray->hit = false;
+		ray->door_hit = false;
 		dda(ray, game->map->map);
-		proj_distance(ray);
+		proj_distance(ray, &game->door_dist);
 		if (x == WIDTH / 2)
 			game->perp_wall_dist = ray->perp_wall_dist;
-		int color1 = 0xe697e0ff;
-		if (ray->side == 0)
-			color1 = color1 * 2;
-		color1 = fog(color1, ray->perp_wall_dist);
-		draw_v_line(x, ray->draw_start, ray->draw_end, color1, game); //will need to change to add color
+		draw_v_line(x, game, ray);
 	}
+	free(ray);
 }

@@ -6,115 +6,113 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:10:06 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/24 15:54:15 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/05 13:40:12 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	clear_img(mlx_image_t *img)
+void	draw_square(mlx_image_t *img, t_point p, int size, uint32_t color)
 {
-	int	x;
-	int	y;
+	t_point	end;
 
-	x = 0;
-	y = 0;
-	while (y < HEIGHT)
+	end.x = p.x + size;
+	end.y = p.y + size;
+	while (p.y < end.y)
 	{
-		x = 0;
-		while (x < WIDTH)
-			mlx_put_pixel(img, x++, y, 0);
-		y++;
-	}
-	//errors?
-}
-
-void	safe_pixel_put(mlx_image_t *img, int x, int y, uint32_t color)
-{
-	if (x < WIDTH && y < HEIGHT
-		&& x > 0 && y > 0)
-		mlx_put_pixel(img, x, y, color);
-	//errors?
-}
-
-void	draw_square(mlx_image_t *img, int x, int y, int size, uint32_t color)
-{
-	int	x_end;
-	int	y_end;
-
-	x_end = x + size;
-	y_end = y + size;
-	while (y < y_end)
-	{
-		while (x < x_end)
+		while (p.x < end.x)
 		{
-			safe_pixel_put(img, x, y, color);
-			x++;
+			safe_pixel_put(img, p.x, p.y, color);
+			p.x++;
 		}
-		x -= size;
-		y++;
+		p.x -= size;
+		p.y++;
 	}
+}
+
+int	color_chooser(char **map, int x, int y)
+{
+	int	color;
+
+	if (map[y][x] == '1')
+		color = 0x7942d6ff;
+	else if (map[y][x] == '0')
+		color = 0xffffffff;
+	else if (map[y][x] == 'D')
+		color = 0xd16bccff;
+	else
+		color = 0xddddddff;
+	return (color);
 }
 
 void	draw_minimap(t_game *game)
 {
-	int			x;
-	int			y;
-	uint32_t	color;
+	int	x;
+	int	y;
+	int	color;
+	int	ms;
 
+	ms = game->mini_scale;
 	y = 0;
 	while (game->map->map[y])
 	{
 		x = 0;
 		while (game->map->map[y][x])
 		{
-			if (game->map->map[y][x] == '1')
-				color = 0x7942d6ff;
-			else if (game->map->map[y][x] == '0')
-				color = 0xffffffff;
-			else
-				color = 0xddddddff;
-			draw_square(game->img, x * MINI_SCALE, y * MINI_SCALE, MINI_SCALE, color);
+			if (game->map->map[y][x] == ' ')
+			{
+				x++;
+				continue ;
+			}
+			color = color_chooser(game->map->map, x, y);
+			draw_square(game->img, (t_point){x * ms,
+				y * ms}, ms, color);
 			x++;
 		}
 		y++;
 	}
 }
 
-/* bresenham, adapted from https://gist.github.com/bert/1085538*/
-void	draw_line(int x0, int y0, int x1, int y1, uint32_t color, mlx_image_t *img)
+/* norm.... */
+t_point	get_step(t_point start, t_point end)
 {
-	int	dx;
-	int	dy;
-	int sx;
-	int	sy;
-	int err;
-	int	e2; /* error value e_xy */
+	t_point	s;
 
-	dx = abs(x1 - x0);
-	dy = -abs(y1 - y0);
-	err = dx + dy;
-	sx = 1;
-	sy = 1;
-	if (x0 > x1)
-		sx = -1;
-	if (y0 > y1)
-		sy = -1;
+	s.x = 1;
+	s.y = 1;
+	if (start.x > end.x)
+		s.x = -1;
+	if (start.y > end.y)
+		s.y = -1;
+	return (s);
+}
+
+/* bresenham, adapted from https://gist.github.com/bert/1085538*/
+void	draw_line(t_point start, t_point end, uint32_t color, mlx_image_t *img)
+{
+	t_point	d;
+	t_point	s;
+	t_point	err;
+
+	d.x = abs(end.x - start.x);
+	d.y = -abs(end.y - start.y);
+	err.x = d.x + d.y;
+	s = get_step(start, end);
 	while (1)
 	{
-		safe_pixel_put(img, x0, y0, color);
-		if (x0 == x1 && y0 == y1)
+		safe_pixel_put(img, start.x, start.y, color);
+		if (start.x == end.x && start.y == end.y)
 			break ;
-		e2 = 2 * err;
-		if (e2 >= dy)/* e_xy+e_x > 0 */
+		err.y = 2 * err.x;
+		if (err.y >= d.y)
 		{
-			err += dy;
-			x0 += sx;
+			err.x += d.y;
+			start.x += s.x;
 		}
-		if (e2 <= dx)/* e_xy+e_y < 0 */
+		if (err.y <= d.x)
 		{
-			err += dx;
-			y0 += sy;
+			err.x += d.x;
+			start.y += s.y;
 		}
 	}
 }

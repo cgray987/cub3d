@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:43:19 by cgray             #+#    #+#             */
-/*   Updated: 2024/07/03 17:14:41 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/05 13:38:46 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,15 @@ int	get_map_width(char **map)
 	return (j_max);
 }
 
-bool	init_map_file(t_map_file *map_file) //, t_map_valid *valid)
+bool	init_map_file(t_map_file *map_file)
 {
 	map_file->map_height = get_map_height(map_file->map);
 	map_file->map_width = get_map_width(map_file->map);
-	if (map_file->map_width == -1)
+	if (map_file->map_width == 0)
+	{
+		dprintf(2, "Map size invalid!\n");
 		return (false);
+	}
 	map_file->init_player_x = 0;
 	map_file->init_player_y = 0;
 	return (true);
@@ -80,6 +83,7 @@ void	free_map_file(t_map_file *map_file)
 	free(map_file);
 }
 
+/* // used for testing
 void	print_fill_map(t_map_file *map_file, char **fill_map)
 {
 	int	i;
@@ -106,4 +110,4 @@ void	print_fill_map(t_map_file *map_file, char **fill_map)
 		i++;
 	}
 }
-
+ */
