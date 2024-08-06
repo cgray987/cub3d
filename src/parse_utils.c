@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:38:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 16:06:33 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/06 13:05:29 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	set_ceiling_floor(char *line, char *dir, t_cub_file *cub)
 
 /* called in handle textures
 	checks that line starts with dir (NO, SO, EA, WE, F, C)
-	skips spaces in line, dups into cub struct
+	skips spaces in front and behind path textures, dups into cub struct
 	returns 1 if successful*/
 int	set_texture_dir(char *line, char *dir, t_cub_file *cub)
 {
@@ -93,9 +93,13 @@ int	set_texture_dir(char *line, char *dir, t_cub_file *cub)
 		line += 2;
 		while (ft_isspace(*line))
 			line++;
-		while (*line++ != '\n' || ft_isspace(*line))
+		while (*line++ != '\n')
+		{
 			size++;
-		line -= size + 1;
+			if (ft_isspace(*line))
+				break ;
+		}
+		line -= size;
 		if (!ft_strncmp(dir, "NO", 2))
 			cub->no = ft_strndup(line, size);
 		else if (!ft_strncmp(dir, "SO", 2))
