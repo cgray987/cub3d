@@ -6,41 +6,11 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:38:13 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/06 13:05:29 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/06 13:31:11 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	free_array(void **array)
-{
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		if (array[i])
-		{
-			free(array[i]);
-			array[i] = NULL;
-		}
-		i++;
-	}
-	if (array)
-		free(array);
-}
-
-void	free_cub_file(t_cub_file *cub_file)
-{
-	free(cub_file->no);
-	free(cub_file->so);
-	free(cub_file->we);
-	free(cub_file->ea);
-	free(cub_file->floor);
-	free(cub_file->ceiling);
-	free_array((void **)cub_file->map);
-	free(cub_file);
-}
 
 void	init_cub_file(t_cub_file *cub_file)
 {
@@ -79,6 +49,18 @@ int	set_ceiling_floor(char *line, char *dir, t_cub_file *cub)
 	return (0);
 }
 
+static void	copy_into_struct(char *line, char *dir, int size, t_cub_file *cub)
+{
+	if (!ft_strncmp(dir, "NO", 2))
+		cub->no = ft_strndup(line, size);
+	else if (!ft_strncmp(dir, "SO", 2))
+		cub->so = ft_strndup(line, size);
+	else if (!ft_strncmp(dir, "WE", 2))
+		cub->we = ft_strndup(line, size);
+	else if (!ft_strncmp(dir, "EA", 2))
+		cub->ea = ft_strndup(line, size);
+}
+
 /* called in handle textures
 	checks that line starts with dir (NO, SO, EA, WE, F, C)
 	skips spaces in front and behind path textures, dups into cub struct
@@ -100,14 +82,7 @@ int	set_texture_dir(char *line, char *dir, t_cub_file *cub)
 				break ;
 		}
 		line -= size;
-		if (!ft_strncmp(dir, "NO", 2))
-			cub->no = ft_strndup(line, size);
-		else if (!ft_strncmp(dir, "SO", 2))
-			cub->so = ft_strndup(line, size);
-		else if (!ft_strncmp(dir, "WE", 2))
-			cub->we = ft_strndup(line, size);
-		else if (!ft_strncmp(dir, "EA", 2))
-			cub->ea = ft_strndup(line, size);
+		copy_into_struct(line, dir, size, cub);
 		return (1);
 	}
 	return (0);

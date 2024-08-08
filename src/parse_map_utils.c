@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:43:19 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 13:38:46 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/06 13:30:39 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,6 @@ bool	init_map_file(t_map_file *map_file)
 	map_file->init_player_x = 0;
 	map_file->init_player_y = 0;
 	return (true);
-}
-
-void	free_map_file(t_map_file *map_file)
-{
-	free_array((void **)map_file->map);
-	free(map_file);
 }
 
 /* // used for testing

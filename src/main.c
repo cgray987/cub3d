@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:17:42 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 13:42:02 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/08 17:00:24 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,17 @@ static void	my_mlx_init(t_game *game)
 	}
 	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	// raycast_start(game);
-	// draw_minimap(game);
 }
 
+/*	malloc game struct
+	parse cub file into game struct
+		if failed free data used
+	start mlx, open window, put img to window
+	loop hook draws image
+	key hook is for press space (open doors)
+	esc closes window
+		--call mlx_terminate
+		free game struct */
 int	main(int ac, char **av)
 {
 	t_game	*game;

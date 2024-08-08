@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 17:25:47 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/02 12:45:33 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/08 17:01:15 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,25 @@ int	fog(int color, double wall_dist)
 	color_limits(&c.g);
 	color_limits(&c.r);
 	return (combine_color(c.r, c.g, c.b, c.a));
+}
+
+/* return color in between color1 and color2 based on height(y) */
+int	grad_color(int color1, int color2, int y)
+{
+	float	factor;
+	t_color	c1;
+	t_color	c2;
+	t_color	c_new;
+
+	factor = 1.0 - (float)abs(y - (HEIGHT / 2)) / (HEIGHT / 2);
+	c1.r = (color1 >> 24) & 0xFF;
+	c1.g = (color1 >> 16) & 0xFF;
+	c1.b = (color1 >> 8) & 0xFF;
+	c2.r = (color2 >> 24) & 0xFF;
+	c2.g = (color2 >> 16) & 0xFF;
+	c2.b = (color2 >> 8) & 0xFF;
+	c_new.r = c1.r + factor * (c2.r - c1.r);
+	c_new.g = c1.g + factor * (c2.g - c1.g);
+	c_new.b = c1.b + factor * (c2.b - c1.b);
+	return (combine_color(c_new.r, c_new.g, c_new.b, 0xff));
 }

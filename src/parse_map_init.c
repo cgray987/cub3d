@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 13:07:19 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 16:23:43 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/08 16:43:22 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ int	get_ceiling_floor_color(char *color)
 		|| b < 0 || b > 255)
 	{
 		dprintf(2, "Floor/Ceiling colors must be in range 0 - 255!\n");
-		return -1;
+		return (-42);
 	}
-	return (combine_color(r, g, b, 0xff));
+	return ((uint32_t)combine_color(r, g, b, 0xff));
 }
 
 /* loads png texture, returning false if any fail */

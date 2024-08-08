@@ -6,7 +6,7 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:38:44 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 16:22:38 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/08 17:01:21 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,6 @@ char	**dup_array(char **array, int height);
 int		get_map_height(char **map);
 int		get_map_width(char **map);
 bool	init_map_file(t_map_file *map_file);
-void	free_map_file(t_map_file *map_file);
 void	print_fill_map(t_map_file *map_file, char **fill_map);
 /* ~~~~~~~~~~~~~~~~~parse_map_init.c~~~~~~~~~~~~~~~~~~~~ */
 void	get_init_direction(t_game *game);
@@ -165,11 +164,13 @@ int		get_ceiling_floor_color(char *color);
 bool	load_texture_error(t_game *game, t_cub_file *cub_file);
 bool	load_textures(t_game *game, t_cub_file *cub_file);
 /* ~~~~~~~~~~~~~~~~~parse_utils.c~~~~~~~~~~~~~~~~~~~~ */
-void	free_array(void **array);
-void	free_cub_file(t_cub_file *cub_file);
 void	init_cub_file(t_cub_file *cub_file);
 int		set_ceiling_floor(char *line, char *dir, t_cub_file *cub);
 int		set_texture_dir(char *line, char *dir, t_cub_file *cub);
+/* ~~~~~~~~~~~~~~~~~parse_free.c~~~~~~~~~~~~~~~~~~~~ */
+void	free_array(void **array);
+void	free_cub_file(t_cub_file *cub_file);
+void	free_map_file(t_map_file *map_file);
 /* ~~~~~~~~~~~~~~~~~draw.c~~~~~~~~~~~~~~~~~~~~ */
 void	clear_img(mlx_image_t *img);
 void	safe_pixel_put(mlx_image_t *img, int x, int y,
@@ -191,6 +192,7 @@ void	door_handler(t_game *game, int i, int j);
 int		combine_color(int r, int g, int b, int a);
 void	color_limits(int *color_component);
 int		fog(int color, double wall_dist);
+int		grad_color(int color1, int color2, int y);
 /* ~~~~~~~~~~~~~~~~~raycast_utils.c~~~~~~~~~~~~~~~~~~~~ */
 void	init_ray(t_ray *ray);
 void	ray_direction(t_ray *ray, double x, double y);

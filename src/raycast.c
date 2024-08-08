@@ -6,29 +6,38 @@
 /*   By: cgray <cgray@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 16:38:27 by cgray             #+#    #+#             */
-/*   Updated: 2024/08/05 13:40:32 by cgray            ###   ########.fr       */
+/*   Updated: 2024/08/08 16:56:50 by cgray            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 /* draws vertical line at given x position
-	draw floor until ray start
+	draw ceiling until ray start
+		gradient between ceiling and floor color
 	draw texture until ray end
-	draw ceiling until screen height*/
+	draw floor until screen height*/
 void	draw_v_line(int x, t_game *game, t_ray *ray)
 {
 	int	y;
+	int	color;
 
 	y = 0;
 	if (ray->draw_start >= HEIGHT || ray->draw_end < 0)
 		return ;
+	color = game->ceiling;
 	while (y < ray->draw_start)
-		safe_pixel_put(game->img, x, y++, game->ceiling);
+	{
+		safe_pixel_put(game->img, x, y,
+			grad_color(game->ceiling, game->floor, y));
+		y++;
+	}
 	draw_texture(x, y, game, ray);
 	y = ray->draw_end;
+	color = game->floor;
 	while (y < HEIGHT)
-		safe_pixel_put(game->img, x, y++, game->floor);
+		safe_pixel_put(game->img, x, y++,
+			game->floor);
 }
 
 /* adds to side distances until a wall is reached in map */
