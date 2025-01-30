@@ -20,8 +20,8 @@
 # include "../lib/mlx/include/MLX42/MLX42.h"
 # include "../lib/libft/includes/libft.h"
 
-# define WIDTH 1024
-# define HEIGHT 768
+# define WIDTH 1920
+# define HEIGHT 1080
 # define MINI_SCALE 8
 # define PI 3.1415926535
 # define MOVE_SPEED 0.1
@@ -98,6 +98,7 @@ typedef struct s_game
 	int				mini_scale;
 	double			perp_wall_dist; //used for drawing on minimap
 	double			door_dist;
+	bool			paused;
 }				t_game;
 
 /* Variable dump for raycasting calculations, */

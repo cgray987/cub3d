@@ -117,5 +117,6 @@ int	parse_data(char *arg, t_game *game)
 		dprintf(2, "Invalid map!\n");
 		return (2);
 	}
+	game->paused = false;
 	return (0);
 }

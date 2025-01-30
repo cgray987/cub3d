@@ -2,11 +2,11 @@ NO                      ./textures/wall1.png
 
 C                    0,0,26
 
-SO ./textures/wall2.png
+SO ./textures/wall1.png
 
-WE     ./textures/wall3.png
+WE     ./textures/wall1.png
 
-EA                   ./textures/wall4.png
+EA                   ./textures/wall1.png
 
 F           153,77,0
 

@@ -75,6 +75,19 @@ void	move_player(t_player *player, int key, char **map)
 			player->y - MOVE_SPEED * dy, map);
 }
 
+static void	pause_game(t_game *game)
+{
+	if (game->paused == true)
+	{
+		mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
+		game->paused = false;
+		return ;
+	}
+	mlx_set_mouse_pos(game->mlx, WIDTH / 2, HEIGHT / 2);
+	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_NORMAL);
+	game->paused = true;
+}
+
 /* this is such a broken way to do this */
 void	open_door(mlx_key_data_t key, void *v_game)
 {
@@ -84,6 +97,8 @@ void	open_door(mlx_key_data_t key, void *v_game)
 	int		margin;
 
 	game = (t_game *)v_game;
+	if (key.key == MLX_KEY_Q && key.action == MLX_PRESS)
+		return (pause_game(game));
 	if (game->door_dist > 2)
 		return ;
 	margin = 2;

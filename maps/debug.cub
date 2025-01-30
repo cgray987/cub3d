@@ -1,14 +1,14 @@
 NO  ./textures/debug_n.png
 
 SO           ./textures/debug_s.png
-F 35, 33, 64
+F 0,0,0
 
 
 
 WE                                 ./textures/debug_w.png
 EA                   ./textures/debug_e.png
 
-C 64, 33, 35
+C 255,255,255
 
 11111111111111111111111111111111
 100000000000000S0000000000000001

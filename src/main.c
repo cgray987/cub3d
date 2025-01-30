@@ -23,7 +23,8 @@ static void	re_draw(t_game *game)
 	double	dx;
 	double	dy;
 
-	mini_pos.x = game->player->x * game->mini_scale - 2;
+	mini_pos.x = WIDTH - (game->map->map_width * game->mini_scale)
+		+ (game->player->x * game->mini_scale) - 2;
 	mini_pos.y = game->player->y * game->mini_scale - 2;
 	dx = game->player->d->dx;
 	dy = game->player->d->dy;
@@ -52,20 +53,23 @@ static void	key_hook(void *v_game)
 	game = (t_game *)v_game;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-		move_player(game->player, MLX_KEY_A, game->map->map);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-		move_player(game->player, MLX_KEY_D, game->map->map);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-		move_player(game->player, MLX_KEY_W, game->map->map);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-		move_player(game->player, MLX_KEY_S, game->map->map);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		rotate_player(game->player, -MOVE_SPEED);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		rotate_player(game->player, MOVE_SPEED);
-	mouse_rotation(game);
-	re_draw(game);
+	if (game->paused == false)
+	{
+		if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+			move_player(game->player, MLX_KEY_A, game->map->map);
+		if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+			move_player(game->player, MLX_KEY_D, game->map->map);
+		if (mlx_is_key_down(game->mlx, MLX_KEY_W))
+			move_player(game->player, MLX_KEY_W, game->map->map);
+		if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+			move_player(game->player, MLX_KEY_S, game->map->map);
+		if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+			rotate_player(game->player, -MOVE_SPEED);
+		if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+			rotate_player(game->player, MOVE_SPEED);
+		mouse_rotation(game);
+		re_draw(game);
+	}
 }
 
 /*	texture flag == 0 ->game and textures has been init
@@ -91,7 +95,8 @@ static void	free_shit(t_game *game, int txt_flag)
 /*	start mlx, create image and draw first raycast proj */
 static void	my_mlx_init(t_game *game)
 {
-	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3D", false);
+	mlx_set_setting(MLX_STRETCH_IMAGE, 1);
+	game->mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!game->mlx)
 	{
 		dprintf(2, "MLX Error!\n");

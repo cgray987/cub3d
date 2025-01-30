@@ -65,7 +65,8 @@ void	draw_minimap(t_game *game)
 				continue ;
 			}
 			color = color_chooser(game->map->map, x, y);
-			draw_square(game->img, (t_point){x * ms,
+			draw_square(game->img, (t_point)
+			{WIDTH - (game->map->map_width * ms) + (x * ms),
 				y * ms}, ms, color);
 			x++;
 		}
